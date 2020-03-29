@@ -12,9 +12,20 @@ char atribui(const string &line);
 string tiraEspaco(const string &line);
 string fraseTraduzida(const string &line);
 std::vector<string> instrucoes(const std::vector<string>& texto);
+void escreveArq(std::vector<string> vec);
+void criaFrases();
 
 //------------------------------------------------------------------------------
-int main(){
+int main() {
+  criaFrases();
+
+
+
+  return 0;
+}
+
+
+void criaFrases(){
   std::ifstream infile;
   infile.open("testeula.ula");  //abre o arq de texto
   std::vector<string> texto;
@@ -27,20 +38,23 @@ int main(){
   }
   infile.close();  //fecha o arq de texto
 
-  for (int i = 0; i < texto.size(); i++)
-    std::cout << texto[i] << std::endl;
+  /*for (int i = 0; i < texto.size(); i++)
+    std::cout << texto[i] << std::endl;*/
 
   std::vector<string> saidaArduino = instrucoes(texto);
-  for (int i = 0; i < saidaArduino.size(); i++)
-  std::cout << saidaArduino[i] << std::endl;
+
+  /*for (int i = 0; i < saidaArduino.size(); i++)
+  std::cout << saidaArduino[i] << std::endl;*/
+
+  escreveArq(saidaArduino);
 
 }//end main
 
 
 std::vector<string> instrucoes(const std::vector<string>& texto){
 
-  if(texto[0] != "inicio:")
-    throw std::exception();
+  if(texto[0] != "inicio:")         //le o arquivo e retorna um vetor com as instrucoes prontas
+    throw std::exception();         //e no formato para leitura no arduino
 
   string tipo;
   char a = '0',
@@ -49,16 +63,16 @@ std::vector<string> instrucoes(const std::vector<string>& texto){
   std::vector<string> instrucoesULA;
 
   for(int i = 1; i < size-1; i++){
-    if(texto[i].find("=") == string::npos) {
+    if(texto[i].find("=") == string::npos) {  //define se e uma atribuicao ou instrucao
       string str = "";
       str += a;
       str += b;
-      str += fraseTraduzida(texto[i]);
+      str += fraseTraduzida(texto[i]);   //cria a expressao
       instrucoesULA.push_back(str);
 
     } else {
       if (texto[i].at(0) == 'A') {
-        a = atribui(texto[i]);
+        a = atribui(texto[i]);       //atribui os valores a A e B
       } else {
         b = atribui(texto[i]);
       }//end if qual variavel recebe o valor
@@ -76,8 +90,7 @@ std::vector<string> instrucoes(const std::vector<string>& texto){
 
 string fraseTraduzida(const string &line){
 
-  string instrucao;
-  //std::cout << line << std::endl;
+  string instrucao;   //retorna o codigo em hexa de qual instrucao esta presente
 
   if(line == "zeroL;")instrucao = "0";
   else if(line == "umL;")instrucao = "1";
@@ -96,13 +109,11 @@ string fraseTraduzida(const string &line){
   else if(line == "AnouBn;")instrucao = "E";
   else if(line == "AneBn;")instrucao = "F";
 
-  //std::cout << "oi" << instrucao << std::endl;
-
   return instrucao;
 }
 
 char atribui(const string &line){
-  return line[2];
+  return line[2];   //retorna o valor que deve ser atribuido
 }
 
 string tiraEspaco(const string &line){
@@ -111,6 +122,16 @@ string tiraEspaco(const string &line){
     if(line.at(i) != ' ')
       str += line.at(i);
   return str;
+}
+
+void escreveArq(std::vector<string> vec){
+  std::ofstream outFile;
+  outFile.open("testeula.hex");
+
+  for(int i = 0; i < vec.size(); i++)
+    outFile << vec[i] << std::endl;
+
+  outFile.close();
 }
 //------------------------------------------------------------------------------
 //operacoes logicas
