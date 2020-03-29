@@ -146,11 +146,3 @@ void mensageiro(std::vector<string> linhas, string porta){
   }//end of for
 
 }//end of mensageiro
-//------------------------------------------------------------------------------
-/*
-
-main - chama a traduzir depois a executar
-ULATraduzir("testeula.ula")   //Traduz e manda para o arquivo
-ULAExcecutar()  //Excecuta o aquivo traduzido
-
-*/
