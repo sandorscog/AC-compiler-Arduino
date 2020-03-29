@@ -13,19 +13,21 @@ string tiraEspaco(const string &line);
 string fraseTraduzida(const string &line);
 std::vector<string> instrucoes(const std::vector<string>& texto);
 void escreveArq(std::vector<string> vec);
-void criaFrases();
+std::vector<string> criaFrases();
+void mensageiro(std::vector<string> linhas, string porta);
 
 //------------------------------------------------------------------------------
 int main() {
-  criaFrases();
-
-
+  std::vector<string>saidaArduino = criaFrases();
+  string porta;
+  std::cin >> porta;
+  std::cin.ignore();
+  mensageiro(saidaArduino, porta);
 
   return 0;
 }
 
-
-void criaFrases(){
+std::vector<string> criaFrases(){
   std::ifstream infile;
   infile.open("testeula.ula");  //abre o arq de texto
   std::vector<string> texto;
@@ -47,9 +49,9 @@ void criaFrases(){
   std::cout << saidaArduino[i] << std::endl;*/
 
   escreveArq(saidaArduino);
+  return saidaArduino;
 
-}//end main
-
+}
 
 std::vector<string> instrucoes(const std::vector<string>& texto){
 
@@ -133,9 +135,18 @@ void escreveArq(std::vector<string> vec){
 
   outFile.close();
 }
-//------------------------------------------------------------------------------
-//operacoes logicas
 
+void mensageiro(std::vector<string> linhas, string porta){
+  string enviar;
+
+  for(int i = 0; i < linhas.size(); i++){
+    enviar = "envia.exe " + porta + " " + linhas[i];
+    std::system(enviar.c_str());
+    std::cin.ignore(100, '\n');
+  }//end of for
+
+}//end of mensageiro
+//------------------------------------------------------------------------------
 /*
 
 main - chama a traduzir depois a executar
